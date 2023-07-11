@@ -23,7 +23,9 @@ stages:
     - task: Docker@2
       displayName: Build an image
       inputs:
-        command: build
+        command: buildAndPush
+        repository: mutistage-cache
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        containerRegistry: demodevinda
         tags: |
           $(tag)
