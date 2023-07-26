@@ -11,6 +11,7 @@ COPY pnpm-lock.yaml /app
 
 FROM base AS prod-deps
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+RUN sleep 90
 
 
 ##
