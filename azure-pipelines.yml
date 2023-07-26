@@ -10,6 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  DOCKER_BUILDKIT: 1
 
 stages:
 - stage: Build
@@ -22,8 +23,6 @@ stages:
     steps:
     - task: Docker@2
       displayName: Build an image
-      env:
-        DOCKER_BUILDKIT: 1
       inputs:
         command: buildAndPush
         repository: mutistage-cache
