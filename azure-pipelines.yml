@@ -23,7 +23,7 @@ stages:
       vmImage: ubuntu-latest
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Build prod dependencies
       env:
         DOCKER_BUILDKIT: 1
       inputs:
@@ -34,3 +34,15 @@ stages:
         arguments: '--target prod-deps --cache-from=$(registryName)/$(imageRepository):latest-prod-deps'
         tags: |
           latest-prod-deps
+    - task: Docker@2
+      displayName: Build running image
+      env:
+        DOCKER_BUILDKIT: 1
+      inputs:
+        command: buildAndPush
+        repository: '$(imageRepository)'
+        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        containerRegistry: demodevinda
+        arguments: '--cache-from=$(registryName)/$(imageRepository):latest-prod-deps --cache-from=$(registryName)/$(imageRepository):latest'
+        tags: |
+          latest
