@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install production dependencies.
-RUN pnpm i --production
+RUN pnpm install --prod
 
 # Copy local code to the container image.
 COPY . .
