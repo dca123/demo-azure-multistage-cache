@@ -2,6 +2,7 @@
 # https://hub.docker.com/_/node
 FROM node:10
 
+RUN npm install -g pnpm
 # Create and change to the app directory.
 WORKDIR /usr/src/app
 
