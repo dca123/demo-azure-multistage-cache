@@ -1,21 +1,19 @@
-# Use the official Node.js 10 image.
-# https://hub.docker.com/_/node
-FROM node:10
+FROM node:20-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-RUN npm install -g pnpm
-# Create and change to the app directory.
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy application dependency manifests to the container image.
-# A wildcard is used to ensure both package.json AND package-lock.json are copied.
-# Copying this separately prevents re-running npm install on every code change.
-COPY package*.json ./
+COPY package.json /app
+COPY pnpm-lock.yaml /app
 
-# Install production dependencies.
-RUN pnpm install --prod
+FROM base AS prod-deps
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-# Copy local code to the container image.
-COPY . .
+FROM base
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY ./src /app/src
 
-# Run the web service on container startup.
-CMD [ "npm", "start" ]
+EXPOSE 3000
+CMD [ "pnpm", "start" ]
