@@ -27,7 +27,7 @@ stages:
       env:
         DOCKER_BUILDKIT: 1
       inputs:
-        command: buildAndPush
+        command: 'build'
         repository: '$(imageRepository)'
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         containerRegistry: demodevinda
