@@ -30,3 +30,4 @@ stages:
         containerRegistry: demodevinda
         tags: |
           $(tag)
+          | latest
