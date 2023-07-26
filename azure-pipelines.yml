@@ -25,7 +25,7 @@ stages:
     - task: Docker@2
       displayName: "Registry Login"
       inputs:
-        containerRegistry: '$(containerRegistry)'
+        containerRegistry: demodevinda
         command: 'login'
     - script: "docker pull $(registryName)/$(imageRepository):latest-build && docker pull $(registryName)/$(imageRepository):latest"
       displayName: "Pull latest for layer caching"
