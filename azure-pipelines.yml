@@ -27,7 +27,7 @@ stages:
       inputs:
         containerRegistry: demodevinda
         command: 'login'
-    - script: "docker pull $(registryName)/$(imageRepository):latest-build && docker pull $(registryName)/$(imageRepository):latest"
+    - script: "docker pull $(registryName)/$(imageRepository):latest-prod-deps && docker pull $(registryName)/$(imageRepository):latest"
       displayName: "Pull latest for layer caching"
       # condition: ne(variables['USE_BUILD_CACHE'], 'false')
       continueOnError: true # for the first build, tags will not exist yet
