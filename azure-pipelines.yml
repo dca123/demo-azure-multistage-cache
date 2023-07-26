@@ -32,7 +32,7 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         containerRegistry: demodevinda
         arguments: '--target prod-deps'
-        # arguments: '--cache-from=$(registryName)/$(imageRepository):latest-prod-deps'
+        arguments: '--cache-from=$(registryName)/$(imageRepository):latest-prod-deps'
         tags: |
           latest-prod-deps
     - task: Docker@2
