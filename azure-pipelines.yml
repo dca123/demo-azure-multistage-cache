@@ -37,7 +37,7 @@ stages:
       env:
         DOCKER_BUILDKIT: 1
       inputs:
-        command: 'build'
+        command: 'buildx'
         repository: '$(imageRepository)'
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         containerRegistry: '$(containerRegistry)'
