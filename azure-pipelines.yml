@@ -23,15 +23,15 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-    - task: Docker@2
-      displayName: "Registry Login"
-      inputs:
-        containerRegistry: '$(containerRegistry)'
-        command: 'login'
-    - script: "docker pull $(registryName)/$(imageRepository):latest-prod-deps && docker pull $(registryName)/$(imageRepository):latest"
-      displayName: "Pull latest for layer caching"
-      # condition: ne(variables['USE_BUILD_CACHE'], 'false')
-      continueOnError: true # for the first build, tags will not exist yet
+    # - task: Docker@2
+    #   displayName: "Registry Login"
+    #   inputs:
+    #     containerRegistry: '$(containerRegistry)'
+    #     command: 'login'
+    # - script: "docker pull $(registryName)/$(imageRepository):latest-prod-deps && docker pull $(registryName)/$(imageRepository):latest"
+    #   displayName: "Pull latest for layer caching"
+    #   # condition: ne(variables['USE_BUILD_CACHE'], 'false')
+    #   continueOnError: true # for the first build, tags will not exist yet
     - task: Docker@2
       displayName: Build prod dependencies
       env:
@@ -41,7 +41,7 @@ stages:
         repository: '$(imageRepository)'
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         containerRegistry: '$(containerRegistry)'
-        arguments: '--target prod-deps --cache-from=$(registryName)/$(imageRepository):latest-prod-deps --build-arg BUILDKIT_INLINE_CACHE=1'
+        arguments: '--target prod-deps --cache-from=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps --cache-to=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps'
         tags: |
           latest-prod-deps
     - task: Docker@2
@@ -64,5 +64,5 @@ stages:
         repository: $(imageRepository)
         tags: |
           latest-prod-deps
-          latest
+          
     
