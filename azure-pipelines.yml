@@ -41,7 +41,7 @@ stages:
         repository: '$(imageRepository)'
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         containerRegistry: '$(containerRegistry)'
-        arguments: 'build --target prod-deps --cache-from=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps --cache-to=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps'
+        arguments: 'build . --target prod-deps --cache-from=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps --cache-to=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps'
         tags: |
           latest-prod-deps
     - task: Docker@2
