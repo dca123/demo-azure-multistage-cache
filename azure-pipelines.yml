@@ -37,10 +37,11 @@ stages:
       env:
         DOCKER_BUILDKIT: 1
       inputs:
-        command: 'buildx build --target prod-deps --cache-from=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps --cache-to=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps'
+        command: 'buildx'
         repository: '$(imageRepository)'
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         containerRegistry: '$(containerRegistry)'
+        arguments: 'build --target prod-deps --cache-from=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps --cache-to=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps'
         tags: |
           latest-prod-deps
     - task: Docker@2
