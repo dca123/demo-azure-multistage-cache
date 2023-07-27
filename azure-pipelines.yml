@@ -36,8 +36,7 @@ stages:
         restoreKeys: 'docker | "$(Agent.OS)"' 
     - bash: |
         docker buildx create --driver docker-container --use
-        docker buildx build --cache-to type=local,dest=/tmp/.buildx-cache-new --cache-from type=local,src=/tmp/.buildx-cache --push --target prod-deps --tag $(registryName)/$(imageRepository):latest-prod-deps .
-        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+        docker buildx build --cache-to type=local,dest=/tmp/.buildx-cache --cache-from type=local,src=/tmp/.buildx-cache --push --target prod-deps --tag $(registryName)/$(imageRepository):latest-prod-deps .
 
     # - script: "docker pull $(registryName)/$(imageRepository):latest-prod-deps && docker pull $(registryName)/$(imageRepository):latest"
     #   displayName: "Pull latest for layer caching"

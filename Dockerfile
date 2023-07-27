@@ -11,7 +11,7 @@ COPY pnpm-lock.yaml /app
 
 FROM base AS prod-deps
 RUN pnpm install --prod --frozen-lockfile
-RUN sleep 90
+RUN sleep 10
 
 
 ##
