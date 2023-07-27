@@ -23,49 +23,59 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-    # - task: Docker@2
-    #   displayName: "Registry Login"
-    #   inputs:
-    #     containerRegistry: '$(containerRegistry)'
-    #     command: 'login'
+    - task: Docker@2
+      displayName: "Registry Login"
+      inputs:
+        containerRegistry: '$(containerRegistry)'
+        command: 'login'
+    - task: Cache@2
+      displayName: Cache task
+      inputs:
+        key: 'docker | "$(Agent.OS)" | "$(Build.SourceVersion)"'
+        path: /tmp/.buildx-cache
+        restoreKeys: 'docker | "$(Agent.OS)"' 
+    - bash: |
+        docker buildx create --driver docker-container --use
+        docker buildx build --cache-to type=local,dest=/tmp/.buildx-cache-new --cache-from type=local,src=/tmp/.buildx-cache --push --target prod-deps --tag $(registryName)/$(imageRepository):latest-prod-deps .
+
     # - script: "docker pull $(registryName)/$(imageRepository):latest-prod-deps && docker pull $(registryName)/$(imageRepository):latest"
     #   displayName: "Pull latest for layer caching"
     #   # condition: ne(variables['USE_BUILD_CACHE'], 'false')
     #   continueOnError: true # for the first build, tags will not exist yet
-    - script: "docker buildx create --driver docker-container --use"
-      displayName: "Create buildx instance"
-      # condition: ne(variables['USE_BUILD_CACHE'], 'false')
-    - task: Docker@2
-      displayName: Build prod dependencies
-      env:
-        DOCKER_BUILDKIT: 1
-      inputs:
-        command: 'buildx'
-        repository: '$(imageRepository)'
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        containerRegistry: '$(containerRegistry)'
-        arguments: 'build . --target prod-deps --cache-from=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps --cache-to=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps'
-        tags: |
-          latest-prod-deps
-    - task: Docker@2
-      displayName: Build running image
-      env:
-        DOCKER_BUILDKIT: 1
-      inputs:
-        command: 'build'
-        repository: '$(imageRepository)'
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        containerRegistry: '$(containerRegistry)'
-        arguments: '--cache-from=$(registryName)/$(imageRepository):latest-prod-deps --cache-from=$(registryName)/$(imageRepository):latest'
-        tags: |
-          latest
-    - task: Docker@2
-      displayName: "Push image"
-      inputs:
-        command: push
-        containerRegistry: "$(containerRegistry)"
-        repository: $(imageRepository)
-        tags: |
-          latest-prod-deps
+    # - script: "docker buildx create --driver docker-container --use"
+    #   displayName: "Create buildx instance"
+    #   # condition: ne(variables['USE_BUILD_CACHE'], 'false')
+    # - task: Docker@2
+    #   displayName: Build prod dependencies
+    #   env:
+    #     DOCKER_BUILDKIT: 1
+    #   inputs:
+    #     command: 'buildx'
+    #     repository: '$(imageRepository)'
+    #     dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+    #     containerRegistry: '$(containerRegistry)'
+    #     arguments: 'build . --target prod-deps --cache-from=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps --cache-to=type=registry,ref=$(registryName)/$(imageRepository):latest-prod-deps'
+    #     tags: |
+    #       latest-prod-deps
+    # - task: Docker@2
+    #   displayName: Build running image
+    #   env:
+    #     DOCKER_BUILDKIT: 1
+    #   inputs:
+    #     command: 'build'
+    #     repository: '$(imageRepository)'
+    #     dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+    #     containerRegistry: '$(containerRegistry)'
+    #     arguments: '--cache-from=$(registryName)/$(imageRepository):latest-prod-deps --cache-from=$(registryName)/$(imageRepository):latest'
+    #     tags: |
+    #       latest
+    # - task: Docker@2
+    #   displayName: "Push image"
+    #   inputs:
+    #     command: push
+    #     containerRegistry: "$(containerRegistry)"
+    #     repository: $(imageRepository)
+    #     tags: |
+    #       latest-prod-deps
           
     
