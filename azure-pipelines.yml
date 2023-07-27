@@ -32,12 +32,12 @@ stages:
       displayName: Cache task
       inputs:
         key: 'docker | "$(Agent.OS)" | "$(Build.SourceVersion)"'
-        path: /tmp/.buildx-cache2
+        path: /tmp/.buildx-cache
         restoreKeys: 'docker | "$(Agent.OS)"' 
     - bash: |
         docker buildx create --driver docker-container --use
-        docker buildx build --cache-to type=local,dest=/tmp/.buildx-cache2/prod-deps --cache-from type=local,src=/tmp/.buildx-cache2/prod-deps --target prod-deps --tag $(registryName)/$(imageRepository):latest-prod-deps .
-        docker buildx build --cache-to type=local,mode=max,dest=/tmp/.buildx-cache2/complete --cache-from type=local,src=/tmp/.buildx-cache2/complete --push --tag $(registryName)/$(imageRepository):latest .
+        docker buildx build --cache-to type=local,dest=/tmp/.buildx-cache/prod-deps --cache-from type=local,src=/tmp/.buildx-cache/prod-deps --target prod-deps --tag $(registryName)/$(imageRepository):latest-prod-deps .
+        docker buildx build --cache-to type=local,mode=max,dest=/tmp/.buildx-cache/complete --cache-from type=local,src=/tmp/.buildx-cache/complete --push --tag $(registryName)/$(imageRepository):latest .
 
     # - script: "docker pull $(registryName)/$(imageRepository):latest-prod-deps && docker pull $(registryName)/$(imageRepository):latest"
     #   displayName: "Pull latest for layer caching"
