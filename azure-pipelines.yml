@@ -32,7 +32,7 @@ stages:
     #   displayName: "Pull latest for layer caching"
     #   # condition: ne(variables['USE_BUILD_CACHE'], 'false')
     #   continueOnError: true # for the first build, tags will not exist yet
-    - script: "docker buildx create --use"
+    - script: "docker buildx create --driver docker-container --use"
       displayName: "Create buildx instance"
       # condition: ne(variables['USE_BUILD_CACHE'], 'false')
     - task: Docker@2
