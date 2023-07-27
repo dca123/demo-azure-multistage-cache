@@ -6,7 +6,7 @@ const server = fastify({
 
 // Declare a route
 server.get("/", function handler(request, reply) {
-  reply.send({ hello: "tom2" });
+  reply.send({ hello: "devinda" });
 });
 
 // Run the server!
